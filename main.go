@@ -1,11 +1,15 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"os"
 
+	_ "github.com/lib/pq"
+
 	"github.com/mnisyif/aggreGator/internal/commands"
 	"github.com/mnisyif/aggreGator/internal/config"
+	"github.com/mnisyif/aggreGator/internal/database"
 )
 
 func main() {
@@ -15,8 +19,16 @@ func main() {
 		os.Exit(1)
 	}
 
+	db, err := sql.Open("postgres", config.DBURL)
+	if err != nil {
+		fmt.Printf("could not create a connection with database: %s\n", err)
+		os.Exit(1)
+	}
+	dbQueries := database.New(db)
+
 	userState := commands.State{
 		Cfg: config,
+		DB:  dbQueries,
 	}
 
 	cmdList := commands.Commands{
@@ -24,6 +36,7 @@ func main() {
 	}
 
 	cmdList.Register("login", handlerLogin)
+	cmdList.Register("register", handlerRegister)
 
 	if len(os.Args) < 2 {
 		fmt.Printf("You are missing command arguments\n")

@@ -5,10 +5,12 @@ import (
 	"errors"
 
 	"github.com/mnisyif/aggreGator/internal/config"
+	"github.com/mnisyif/aggreGator/internal/database"
 )
 
 type State struct {
 	Cfg *config.Config
+	DB  *database.Queries
 }
 
 type Command struct {
