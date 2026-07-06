@@ -12,10 +12,14 @@ import (
 
 func handlerLogin(s *commands.State, cmd commands.Command) error {
 	if len(cmd.Args) == 0 {
-		return fmt.Errorf("login command expects a username argument")
+		return fmt.Errorf("login command expects a username argument\n")
 	}
 
-	err := s.Cfg.SetUser(cmd.Args[0])
+	user, err := s.DB.GetUserByName(context.Background(), cmd.Args[0])
+	if err != nil {
+		return fmt.Errorf("username not found, please register to login\n")
+	}
+	err = s.Cfg.SetUser(user.Name)
 	if err != nil {
 		return err
 	}
