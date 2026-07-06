@@ -3,7 +3,6 @@ package config
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 )
@@ -14,19 +13,11 @@ type Config struct {
 	DBURL string `json:"db_url"`
 }
 
-func Read(filename *string) (*Config, error) {
-	if filename == nil {
-		return nil, errors.New("please define a filename")
-	}
-
-	homePath, err := os.UserHomeDir()
+func ReadConfig() (*Config, error) {
+	configPath, err := getConfigPath()
 	if err != nil {
-		fmt.Printf("Couldnt retrieve home address: %s\n", err)
-		os.Exit(1)
+		return nil, err
 	}
-
-	configPath := fmt.Sprintf("%s/%s", homePath, *filename)
-
 	data, err := os.ReadFile(configPath)
 	if err != nil {
 		return nil, err
@@ -43,4 +34,13 @@ func Read(filename *string) (*Config, error) {
 
 func (c *Config) SetUser(user string) error {
 	return nil
+}
+
+func getConfigPath() (string, error) {
+	homePath, err := os.UserHomeDir()
+	if err != nil {
+		return "", fmt.Errorf("couldnt retrieve home address: %s", err)
+	}
+
+	return fmt.Sprintf("%s/%s", homePath, confiFileName), nil
 }
