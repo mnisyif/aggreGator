@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-	filename := ".gatorconfig.json"
 
 	config, err := config.Read(&filename)
 	if err != nil {

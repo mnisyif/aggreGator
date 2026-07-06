@@ -8,6 +8,8 @@ import (
 	"os"
 )
 
+const confiFileName = ".gatorconfig.json"
+
 type Config struct {
 	DBURL string `json:"db_url"`
 }
