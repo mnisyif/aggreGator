@@ -14,5 +14,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("DB URL: %s\n", config.DBURL)
+	config.SetUser("Murtadha")
+
+	fmt.Printf("url: %s\nuser: %s\n", config.DBURL, config.CurrentUser)
 }

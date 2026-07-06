@@ -10,7 +10,8 @@ import (
 const configFileName = ".gatorconfig.json"
 
 type Config struct {
-	DBURL string `json:"db_url"`
+	DBURL       string `json:"db_url"`
+	CurrentUser string `json:"current_user_name"`
 }
 
 func GetConfig() (*Config, error) {
@@ -33,7 +34,33 @@ func GetConfig() (*Config, error) {
 }
 
 func (c *Config) SetUser(user string) error {
-	return nil
+	if user == "" {
+		return fmt.Errorf("enter a name to update the config")
+	}
+	c.CurrentUser = user
+
+	err := write(c)
+	if err != nil {
+		return err
+	}
+
+	return err
+}
+
+func write(cfg *Config) error {
+	configPath, err := getConfigPath()
+	if err != nil {
+		return err
+	}
+
+	prettyJSON, err := json.MarshalIndent(cfg, "", "    ")
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(configPath, prettyJSON, 0o600)
+
+	return err
 }
 
 func getConfigPath() (string, error) {
@@ -42,5 +69,5 @@ func getConfigPath() (string, error) {
 		return "", fmt.Errorf("couldnt retrieve home address: %s", err)
 	}
 
-	return fmt.Sprintf("%s/%s", homePath, confiFileName), nil
+	return fmt.Sprintf("%s/%s", homePath, configFileName), nil
 }
