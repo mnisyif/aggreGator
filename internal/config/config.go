@@ -13,7 +13,7 @@ type Config struct {
 	DBURL string `json:"db_url"`
 }
 
-func ReadConfig() (*Config, error) {
+func GetConfig() (*Config, error) {
 	configPath, err := getConfigPath()
 	if err != nil {
 		return nil, err

@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	config, err := config.ReadConfig()
+	config, err := config.GetConfig()
 	if err != nil {
 		fmt.Printf("couldnt read config: %s\n", err)
 		os.Exit(1)
