@@ -12,12 +12,12 @@ import (
 
 func handlerLogin(s *commands.State, cmd commands.Command) error {
 	if len(cmd.Args) == 0 {
-		return fmt.Errorf("login command expects a username argument\n")
+		return fmt.Errorf("login command expects a username argument  ")
 	}
 
 	user, err := s.DB.GetUserByName(context.Background(), cmd.Args[0])
 	if err != nil {
-		return fmt.Errorf("username not found, please register to login\n")
+		return fmt.Errorf("username not found, please register to login  ")
 	}
 	err = s.Cfg.SetUser(user.Name)
 	if err != nil {
@@ -31,7 +31,7 @@ func handlerLogin(s *commands.State, cmd commands.Command) error {
 
 func handlerRegister(s *commands.State, cmd commands.Command) error {
 	if len(cmd.Args) == 0 {
-		return fmt.Errorf("register command expects a username argument\n")
+		return fmt.Errorf("register command expects a username argument  ")
 	}
 
 	newUser := database.CreateUserParams{
@@ -43,7 +43,7 @@ func handlerRegister(s *commands.State, cmd commands.Command) error {
 
 	user, err := s.DB.CreateUser(context.Background(), newUser)
 	if err != nil {
-		return fmt.Errorf("could not register <%s> : %s\n", cmd.Args[0], err)
+		return fmt.Errorf("could not register <%s> : %s  ", cmd.Args[0], err)
 	}
 
 	s.Cfg.SetUser(user.Name)
