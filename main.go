@@ -37,6 +37,7 @@ func main() {
 
 	cmdList.Register("login", handlerLogin)
 	cmdList.Register("register", handlerRegister)
+	cmdList.Register("reset", handlerReset)
 
 	if len(os.Args) < 2 {
 		fmt.Printf("You are missing command arguments\n")

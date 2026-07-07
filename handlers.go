@@ -51,3 +51,8 @@ func handlerRegister(s *commands.State, cmd commands.Command) error {
 	fmt.Printf("ID: %s, Name: %s, Created At: %s\n", user.ID, user.Name, user.CreatedAt)
 	return nil
 }
+
+func handlerReset(s *commands.State, cmd commands.Command) error {
+	err := s.DB.ResetTable(context.Background())
+	return err
+}
