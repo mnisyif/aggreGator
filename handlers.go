@@ -56,3 +56,20 @@ func handlerReset(s *commands.State, cmd commands.Command) error {
 	err := s.DB.ResetTable(context.Background())
 	return err
 }
+
+func handlerUsers(s *commands.State, cmd commands.Command) error {
+	usersList, err := s.DB.GetUsers(context.Background())
+	if err != nil {
+		return err
+	}
+
+	for _, user := range usersList {
+		if user.Name == s.Cfg.CurrentUser {
+			fmt.Printf("* %s (current)\n", user.Name)
+			continue
+		}
+		fmt.Printf("* %s\n", user.Name)
+	}
+
+	return nil
+}
