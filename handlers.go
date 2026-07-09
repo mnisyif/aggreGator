@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/mnisyif/aggreGator/internal/commands"
 	"github.com/mnisyif/aggreGator/internal/database"
+	"github.com/mnisyif/aggreGator/internal/rss"
 )
 
 func handlerLogin(s *commands.State, cmd commands.Command) error {
@@ -71,5 +72,20 @@ func handlerUsers(s *commands.State, cmd commands.Command) error {
 		fmt.Printf("* %s\n", user.Name)
 	}
 
+	return nil
+}
+
+func handlerFeed(s *commands.State, cmd commands.Command) error {
+	feedURL := "https://www.wagslane.dev/index.xml"
+	// if len(cmd.Args) == w {
+	// 	return fmt.Errorf("agg command expects a link to fetch RSS feed from")
+	// }
+
+	feed, err := rss.FetchFeed(context.Background(), feedURL)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("%v\n", feed)
 	return nil
 }
