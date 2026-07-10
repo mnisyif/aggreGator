@@ -89,3 +89,34 @@ func handlerFeed(s *commands.State, cmd commands.Command) error {
 	fmt.Printf("%v\n", feed)
 	return nil
 }
+
+func handlerAddFeed(s *commands.State, cmd commands.Command) error {
+	if len(cmd.Args) < 2 {
+		return fmt.Errorf("addFeed expects <name_of_feed> and <url_of_feed> as arguments")
+	}
+
+	user, err := s.DB.GetUserByName(context.Background(), s.Cfg.CurrentUser)
+	if err != nil {
+		return err
+	}
+
+	newFeed := database.CreateFeedParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+		Name:      cmd.Args[0],
+		Url:       cmd.Args[1],
+		UserID:    user.ID,
+	}
+
+	feed, err := s.DB.CreateFeed(context.Background(), newFeed)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Feed ID: %s\n", feed.ID)
+	fmt.Printf("Feed Title: %s\n", feed.Name)
+	fmt.Printf("Feed URL: %s\n", feed.Url)
+
+	return nil
+}
