@@ -41,6 +41,7 @@ func main() {
 	cmdList.Register("users", handlerUsers)
 	cmdList.Register("agg", handlerFeed)
 	cmdList.Register("addfeed", handlerAddFeed)
+	cmdList.Register("feeds", handlerFeeds)
 
 	if len(os.Args) < 2 {
 		fmt.Printf("You are missing command arguments\n")
