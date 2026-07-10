@@ -13,5 +13,8 @@ RETURNING *;
 -- name: GetFeedByUserID :many
 SELECT * FROM feeds WHERE user_id = $1;
 
+-- name: GetFeeds :many
+SELECT * FROM feeds;
+
 -- name: ResetFeeds :exec
 DELETE FROM feeds;
