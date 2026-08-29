@@ -141,3 +141,36 @@ func handlerFeeds(s *commands.State, cmd commands.Command) error {
 
 	return nil
 }
+
+func handlerFollow(s *commands.State, cmd commands.Command) error {
+	if len(cmd.Args) < 1 {
+		return fmt.Errorf("follow expects <url_of_feed> as argument")
+	}
+
+	user, err := s.DB.GetUserByName(context.Background(), s.Cfg.CurrentUser)
+	if err != nil {
+		return err
+	}
+
+	feed, err := s.DB.GetFeedByURL(context.Background(), cmd.Args[0])
+	if err != nil {
+		return err
+	}
+
+	newFollow := database.CreateFeedFollowParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+		UserID:    user.ID,
+		FeedID:    feed.ID,
+	}
+
+	feedFollow, err := s.DB.CreateFeedFollow(context.Background(), newFollow)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("%s followed by %s\n", feedFollow.FeedName, feedFollow.UserName)
+
+	return nil
+}
