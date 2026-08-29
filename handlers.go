@@ -90,14 +90,9 @@ func handlerFeed(s *commands.State, cmd commands.Command) error {
 	return nil
 }
 
-func handlerAddFeed(s *commands.State, cmd commands.Command) error {
+func handlerAddFeed(s *commands.State, cmd commands.Command, user database.User) error {
 	if len(cmd.Args) < 2 {
 		return fmt.Errorf("addFeed expects <name_of_feed> and <url_of_feed> as arguments")
-	}
-
-	user, err := s.DB.GetUserByName(context.Background(), s.Cfg.CurrentUser)
-	if err != nil {
-		return err
 	}
 
 	newFeed := database.CreateFeedParams{
@@ -155,14 +150,9 @@ func handlerFeeds(s *commands.State, cmd commands.Command) error {
 	return nil
 }
 
-func handlerFollow(s *commands.State, cmd commands.Command) error {
+func handlerFollow(s *commands.State, cmd commands.Command, user database.User) error {
 	if len(cmd.Args) < 1 {
 		return fmt.Errorf("follow expects <url_of_feed> as argument")
-	}
-
-	user, err := s.DB.GetUserByName(context.Background(), s.Cfg.CurrentUser)
-	if err != nil {
-		return err
 	}
 
 	feed, err := s.DB.GetFeedByURL(context.Background(), cmd.Args[0])
@@ -188,12 +178,7 @@ func handlerFollow(s *commands.State, cmd commands.Command) error {
 	return nil
 }
 
-func handlerFollowing(s *commands.State, cmd commands.Command) error {
-	user, err := s.DB.GetUserByName(context.Background(), s.Cfg.CurrentUser)
-	if err != nil {
-		return err
-	}
-
+func handlerFollowing(s *commands.State, cmd commands.Command, user database.User) error {
 	follows, err := s.DB.GetFeedFollowsForUser(context.Background(), user.ID)
 	if err != nil {
 		return err
