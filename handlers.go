@@ -114,6 +114,19 @@ func handlerAddFeed(s *commands.State, cmd commands.Command) error {
 		return err
 	}
 
+	newFollow := database.CreateFeedFollowParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+		UserID:    user.ID,
+		FeedID:    feed.ID,
+	}
+
+	_, err = s.DB.CreateFeedFollow(context.Background(), newFollow)
+	if err != nil {
+		return err
+	}
+
 	fmt.Printf("Feed ID: %s\n", feed.ID)
 	fmt.Printf("Feed Title: %s\n", feed.Name)
 	fmt.Printf("Feed URL: %s\n", feed.Url)
