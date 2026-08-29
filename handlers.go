@@ -201,7 +201,7 @@ func handlerFollowing(s *commands.State, cmd commands.Command) error {
 
 	fmt.Printf("%s follows: \n", user.Name)
 	for _, follow := range follows {
-		fmt.Printf("  - %s\n", follow)
+		fmt.Printf("  - %s\n", follow.FeedName)
 	}
 
 	return nil
