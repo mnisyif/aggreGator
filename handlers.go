@@ -75,18 +75,46 @@ func handlerUsers(s *commands.State, cmd commands.Command) error {
 	return nil
 }
 
-func handlerFeed(s *commands.State, cmd commands.Command) error {
-	feedURL := "https://www.wagslane.dev/index.xml"
-	// if len(cmd.Args) == w {
-	// 	return fmt.Errorf("agg command expects a link to fetch RSS feed from")
-	// }
-
-	feed, err := rss.FetchFeed(context.Background(), feedURL)
+func scrapFeeds(s *commands.State) error {
+	nextFeed, err := s.DB.GetNextFeedToFetch(context.Background())
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("%v\n", feed)
+	feedToFetch, err := s.DB.MarkFeedFetched(context.Background(), nextFeed.ID)
+	if err != nil {
+		return err
+	}
+
+	fetched, err := rss.FetchFeed(context.Background(), feedToFetch.Url)
+	if err != nil {
+		return err
+	}
+
+	for _, feedItem := range fetched.Channel.Item {
+		fmt.Printf("- %s\n", feedItem.Title)
+	}
+
+	return nil
+}
+
+func handlerFeed(s *commands.State, cmd commands.Command) error {
+	if len(cmd.Args) < 1 {
+		return fmt.Errorf("agg expects <frequency_interval> as an argument")
+	}
+
+	timeBetweenReqs, err := time.ParseDuration(cmd.Args[0])
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Collecting feeds every %v\n", timeBetweenReqs)
+
+	ticker := time.NewTicker(timeBetweenReqs)
+	for ; ; <-ticker.C {
+		scrapFeeds(s)
+	}
+
 	return nil
 }
 
