@@ -44,6 +44,7 @@ func main() {
 	cmdList.Register("feeds", handlerFeeds)
 	cmdList.Register("follow", middlewareLoggedIn(handlerFollow))
 	cmdList.Register("following", middlewareLoggedIn(handlerFollowing))
+	cmdList.Register("unfollow", middlewareLoggedIn(handlerUnFollow))
 
 	if len(os.Args) < 2 {
 		fmt.Printf("You are missing command arguments\n")
