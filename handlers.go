@@ -174,3 +174,22 @@ func handlerFollow(s *commands.State, cmd commands.Command) error {
 
 	return nil
 }
+
+func handlerFollowing(s *commands.State, cmd commands.Command) error {
+	user, err := s.DB.GetUserByName(context.Background(), s.Cfg.CurrentUser)
+	if err != nil {
+		return err
+	}
+
+	follows, err := s.DB.GetFeedFollowsForUser(context.Background(), user.ID)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("%s follows: \n", user.Name)
+	for _, follow := range follows {
+		fmt.Printf("  - %s\n", follow)
+	}
+
+	return nil
+}
